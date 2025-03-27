@@ -32,7 +32,7 @@ class MainActivity2 : AppCompatActivity() {
     //Для первого репоста
     private lateinit var ivRepost11: ImageView
     private lateinit var tvKol11: TextView
-    private var kolRep11 = 0
+    private var kolRep11 = 999
 
     //Для второго репоста
     private lateinit var ivRepost22: ImageView
@@ -42,7 +42,7 @@ class MainActivity2 : AppCompatActivity() {
     //Для третьего репоста
     private lateinit var ivRepost33: ImageView
     private lateinit var tvKol33: TextView
-    private var kolRep33 = 0
+    private var kolRep33 = 999
 
     @SuppressLint("DefaultLocale")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,15 +98,7 @@ class MainActivity2 : AppCompatActivity() {
                 tvKol3.text = likeKol3.toString()
             }
 
-                //Для первого репоста
-                ivRepost11 = findViewById(R.id.imageView6)
-                tvKol11 = findViewById(R.id.textView7)
-                ivRepost11.setOnClickListener {
-                    kolRep11++
-                    tvKol11.text = kolRep11.toString()
-                }
-
-                //Для второго репоста
+                //Из 999 в 1к
                 fun formatRepostCount(count: Int): String {
                     return when {
                         count >= 1000 -> "${count / 1000}K"
@@ -114,6 +106,17 @@ class MainActivity2 : AppCompatActivity() {
                     }
                 }
 
+                //Для первого репоста
+                ivRepost11 = findViewById(R.id.imageView6)
+                tvKol11 = findViewById(R.id.textView7)
+                tvKol11.text = formatRepostCount(kolRep11)
+
+                ivRepost11.setOnClickListener {
+                    kolRep11++
+                    tvKol11.text = formatRepostCount(kolRep11)
+                }
+
+                //Для второго поста
                 ivRepost22 = findViewById(R.id.imageView11)
                 tvKol22 = findViewById(R.id.textView13)
                 tvKol22.text = formatRepostCount(kolRep22)
@@ -127,9 +130,11 @@ class MainActivity2 : AppCompatActivity() {
                 //Для третьего репоста
                 ivRepost33 = findViewById(R.id.imageView)
                 tvKol33 = findViewById(R.id.textView4)
+                tvKol33.text = formatRepostCount(kolRep33)
+
                 ivRepost33.setOnClickListener {
                     kolRep33++
-                    tvKol33.text = kolRep33.toString()
+                    tvKol33.text = formatRepostCount(kolRep33)
                 }
 
 
