@@ -1,10 +1,13 @@
 package com.example.praktika0102
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class PostAdapter(
@@ -24,6 +27,7 @@ class PostAdapter(
         val likeCount: TextView = view.findViewById(R.id.textViewLikeCount)
         val repostCount: TextView = view.findViewById(R.id.textViewRepostCount)
         val viewCount: TextView = view.findViewById(R.id.textViewViewCount)
+        val menuButton: ImageView = view.findViewById(R.id.imageViewMenu)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -54,6 +58,10 @@ class PostAdapter(
         holder.repostButton.setOnClickListener {
             onRepostClick(position)
         }
+
+        holder.menuButton.setOnClickListener {
+            showPostMenu(holder.itemView.context as AppCompatActivity, position)
+        }
     }
 
     override fun getItemCount() = posts.size
@@ -68,5 +76,59 @@ class PostAdapter(
             count >= 1000 -> "${count / 1000}K"
             else -> count.toString()
         }
+    }
+
+    private fun showPostMenu(activity: AppCompatActivity, position: Int) {
+        val dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_post_menu, null)
+        val dialog = AlertDialog.Builder(activity)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<TextView>(R.id.textViewEdit).setOnClickListener {
+            showEditDialog(activity, position)
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<TextView>(R.id.textViewDelete).setOnClickListener {
+            showDeleteConfirmation(activity, position)
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showEditDialog(activity: AppCompatActivity, position: Int) {
+        val post = posts[position]
+        val dialogView = LayoutInflater.from(activity).inflate(R.layout.dialog_edit_post, null)
+        val editText = dialogView.findViewById<EditText>(R.id.editTextPost)
+        editText.setText(post.content)
+
+        AlertDialog.Builder(activity)
+            .setTitle("Редактировать пост")
+            .setView(dialogView)
+            .setPositiveButton("Сохранить") { _, _ ->
+                val newContent = editText.text.toString()
+                if (newContent.isNotEmpty()) {
+                    val updatedPost = post.copy(content = newContent)
+                    val newPosts = posts.toMutableList()
+                    newPosts[position] = updatedPost
+                    updatePosts(newPosts)
+                }
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showDeleteConfirmation(activity: AppCompatActivity, position: Int) {
+        AlertDialog.Builder(activity)
+            .setTitle("Удалить пост")
+            .setMessage("Вы уверены, что хотите удалить этот пост?")
+            .setPositiveButton("Удалить") { _, _ ->
+                val newPosts = posts.toMutableList()
+                newPosts.removeAt(position)
+                updatePosts(newPosts)
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
     }
 } 
