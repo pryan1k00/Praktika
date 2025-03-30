@@ -262,6 +262,16 @@
             app:srcCompat="@drawable/page1" />
 
         <ImageView
+            android:id="@+id/imageViewPlay"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintStart_toStartOf="@+id/imageView9"
+            app:layout_constraintTop_toTopOf="@+id/imageView9"
+            app:srcCompat="@drawable/play" />
+
+        <ImageView
             android:id="@+id/imageView10"
             android:layout_width="25dp"
             android:layout_height="25dp"
