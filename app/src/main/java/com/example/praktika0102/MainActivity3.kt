@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -69,12 +70,49 @@ class MainActivity3 : AppCompatActivity() {
                 val post = posts[position]
                 post.repostCount++
                 adapter.notifyItemChanged(position)
+            },
+            onPostClick = { position ->
+                val post = posts[position]
+                showPostFragment(post)
             }
         )
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity3)
             adapter = this@MainActivity3.adapter
+        }
+    }
+
+    private fun showPostFragment(post: Post) {
+        val fragment = PostFragment.newInstance(
+            post.title,
+            post.time,
+            post.content,
+            post.imageResId,
+            post.likeCount,
+            post.repostCount,
+            post.viewCount,
+            post.isLiked
+        )
+        
+        // Скрываем RecyclerView и показываем контейнер фрагмента
+        recyclerView.visibility = View.GONE
+        findViewById<View>(R.id.fragmentContainer).visibility = View.VISIBLE
+        
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+            // Показываем RecyclerView и скрываем контейнер фрагмента
+            recyclerView.visibility = View.VISIBLE
+            findViewById<View>(R.id.fragmentContainer).visibility = View.GONE
+        } else {
+            super.onBackPressed()
         }
     }
 

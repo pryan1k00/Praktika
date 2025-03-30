@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 class PostAdapter(
     private var posts: List<Post>,
     private val onLikeClick: (Int) -> Unit,
-    private val onRepostClick: (Int) -> Unit
+    private val onRepostClick: (Int) -> Unit,
+    private val onPostClick: (Int) -> Unit
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -61,6 +62,10 @@ class PostAdapter(
 
         holder.menuButton.setOnClickListener {
             showPostMenu(holder.itemView.context as AppCompatActivity, position)
+        }
+
+        holder.itemView.setOnClickListener {
+            onPostClick(position)
         }
     }
 
